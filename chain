@@ -1,0 +1,145 @@
+#include <stdio.h>
+#include <stdlib.h>
+//ADT,链表实现
+//目标：\
+1.创建链表\
+2.元素操作（增删改)\
+3.查看元素数量和指定元素的值
+//main执行：创建链表-增加5个元素-访问链表-删除第三个元素-访问链表
+
+
+//定义一个list变量
+struct list{
+int value;
+struct list *next;
+};
+
+typedef struct list * LIST;
+
+
+
+
+//创建一个链表，返回该链表地址
+LIST creat (int i){
+
+LIST p=malloc(sizeof(struct list));
+p->value=i;
+p->next=NULL;
+}
+
+
+
+//查看链表元素总数
+int readList(LIST ptlist){
+	LIST currenList;
+	LIST nextList;
+	currenList=ptlist;
+for(int i=1;i>0;i++){
+	if(currenList->next==NULL)
+	return i;
+	else
+	currenList=currenList->next;
+}
+}
+
+
+
+
+
+//返回链表第n个元素的指针
+LIST getElem(LIST ptList,int n){
+	LIST currenList;
+	currenList=ptList;
+	for (int i=0;i<n-1;i++)
+	currenList=currenList->next;
+	return currenList;
+}
+
+
+//在链表的第n位增加元素  n>2
+void addElem(LIST ptlist,int value,int n){
+	if(readList(ptlist)==n){   //在链表最后增加元素
+	LIST curren=getElem(ptlist,n);
+	curren->next=malloc(sizeof(struct list));
+	curren->next->value=value;
+	curren->next->next=NULL;
+	}
+        else                    //在第n位增加元素
+	{
+	LIST pre=getElem(ptlist,n-1);
+	LIST TEMP=pre->next;
+	pre->next=malloc(sizeof(struct list));
+	pre->next->value=value;
+	pre->next->next=TEMP;
+        }
+}
+
+//删除第n个元素  n>2
+void deleteElem (LIST ptlist,int n){
+if(readList(ptlist)==n)
+{
+	LIST pre=getElem(ptlist,n-1);
+	free(getElem(ptlist,n));
+	pre->next=NULL;
+}
+else {
+	LIST pre=getElem(ptlist,n-1);
+        LIST next=getElem(ptlist,n+1);
+	free(getElem(ptlist,n));
+	pre->next=next;
+}
+}
+
+//修改第n个元素的alue
+void correctElem(LIST ptlist,int n,int value){
+ptlist->value=value;
+}
+
+
+int getValue(LIST ptlist,int n){ //返回第n个元素的value值
+LIST temp=getElem(ptlist,n);
+return temp->value;
+}
+
+
+
+void allfree(LIST pt){
+LIST curren=pt;
+LIST temp;
+int number = readList(pt);
+for (int i=0;i<number;i++)
+{
+	temp=curren->next;
+	free(curren);
+	curren=temp;
+}
+}
+
+
+
+
+
+int main(){
+LIST head=creat(1);
+for(int i=0;i<5;i++)   //add
+addElem(head,i,readList(head));
+int number=readList(head);
+for(int i=1;i<=number;i++)   //逐个打印链表
+{
+        LIST temp=getElem(head,i);
+	printf("%d   ",temp->value);
+}
+puts(" ");
+deleteElem(head,3);
+number=readList(head);
+for(int i=1;i<=number;i++)   //逐个打印链表
+{
+        LIST temp=getElem(head,i);
+	printf("%d   ",temp->value);
+}
+
+
+allfree(head);
+return 0;
+
+}
